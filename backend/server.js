@@ -4,6 +4,18 @@ const express = require('express');
 // 2️⃣ Importamos el módulo cors para permitir peticiones desde otro origen
 const cors = require('cors');
 
+const pool = require('./db');
+
+// Prueba de conexión
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error de conexión con PostgreSQL:', err);
+  } else {
+    console.log('Conectado a PostgreSQL correctamente. Hora actual:', res.rows[0]);
+  }
+});
+
+
 // 3️⃣ Creamos una aplicación de express
 const app = express();
 
