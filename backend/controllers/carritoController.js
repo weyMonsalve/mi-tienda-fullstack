@@ -18,6 +18,24 @@ const crearCarrito = async(req, res) => {
     }
 };
 
+//Controlador para agregar al carrito
+const agregarAlCarrito = async(req, res) => {
+    try {
+        const { id_usuario, id_producto, cantidad } = req.body;
+
+        if (!id_usuario || !id_producto || !cantidad) {
+            return  res.status(400).json({error: 'Faltan datos: id_usuario, id_producto o cantidad '});
+        }
+
+        const resultado = await carritoModel.agregarAlCarrito(id_usuario, id_producto, cantidad);
+        res.status(201).json(resultado);
+    } catch (error) {
+        console.error('Error al agregar al carrito', error);
+        res.status(500).json({ error: 'Error del servidor al agregar al carrito'});
+    }
+};
+
 module.exports = {
-    crearCarrito
+    crearCarrito,
+    agregarAlCarrito
 }
