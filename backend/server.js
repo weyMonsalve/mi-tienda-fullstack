@@ -1,43 +1,50 @@
-// Importamos el módulo express
+// Importamos el módulo express para crear el servidor
 const express = require('express');
 
-// Importamos el módulo cors para permitir peticiones desde otro origen
+// Importamos cors para permitir peticiones desde otro origen (como el frontend React)
 const cors = require('cors');
 
-// Importamos la conexión a la base de datos
+// Importamos dotenv para poder usar variables de entorno como el puerto
+require('dotenv').config();
+
+// Importamos la conexión a PostgreSQL
 const pool = require('./db');
 
-// Importamos las rutas de productos
-const productosRoutes = require('./routes/productosRoutes'); // 👈 nueva línea
+// Importamos las rutas del backend (productos y carrito)
+const productosRoutes = require('./routes/productosRoutes');  // Ruta para productos
+const carritoRoutes = require('./routes/carritoRoutes');      // Ruta para carrito
 
-// Prueba de conexión
+// Creamos la app de express
+const app = express();
+
+// Definimos el puerto desde una variable de entorno o usamos 3001 por defecto
+const PORT = process.env.PORT || 3001;
+
+// Middlewares:
+// - cors para permitir conexión desde React
+// - express.json para aceptar datos JSON en las peticiones
+app.use(cors());
+app.use(express.json());
+
+// Probamos si la conexión a PostgreSQL funciona correctamente
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.error('Error de conexión con PostgreSQL:', err);
+    console.error('❌ Error de conexión con PostgreSQL:', err);
   } else {
-    console.log('Conectado a PostgreSQL correctamente. Hora actual:', res.rows[0]);
+    console.log('✅ Conectado a PostgreSQL. Hora actual:', res.rows[0]);
   }
 });
 
-// Creamos una aplicación de express
-const app = express();
+// Conectamos las rutas a sus respectivos endpoints
+app.use('/api/productos', productosRoutes);  // Productos: http://localhost:3001/api/productos
+app.use('/api/carrito', carritoRoutes);      // Carrito:   http://localhost:3001/api/carrito
 
-// Definimos el puerto en el que va a correr el servidor
-const PORT = 3001;
-
-// Usamos middlewares: cors y express.json para manejar JSON
-app.use(cors());                // permite que React se comunique con el backend
-app.use(express.json());       // convierte automáticamente el cuerpo de la solicitud a JSON
-
-// Usamos las rutas de productos
-app.use('/api/productos', productosRoutes); // 👈 nueva línea
-
-// Creamos una ruta de prueba
+// Ruta raíz de prueba
 app.get('/', (req, res) => {
   res.send('¡Servidor backend funcionando correctamente!');
 });
 
-// Ponemos a escuchar el servidor
+// Iniciamos el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
 });
