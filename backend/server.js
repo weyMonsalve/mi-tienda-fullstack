@@ -1,4 +1,4 @@
-// Importamos el módulo express para crear el servidor
+// Importamos express para crear el servidor
 const express = require('express');
 
 // Importamos cors para permitir peticiones desde otro origen (como el frontend React)
@@ -10,9 +10,10 @@ require('dotenv').config();
 // Importamos la conexión a PostgreSQL
 const pool = require('./db');
 
-// Importamos las rutas del backend (productos y carrito)
+//Importamos rutas (cada una maneja un módulo del sistema)
 const productosRoutes = require('./routes/productosRoutes');  // Ruta para productos
 const carritoRoutes = require('./routes/carritoRoutes');      // Ruta para carrito
+const usuariosRoutes = require('./routes/usuariosRoutes');    // Ruta para usuarios
 
 // Creamos la app de express
 const app = express();
@@ -21,10 +22,15 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares:
-// - cors para permitir conexión desde React
-// - express.json para aceptar datos JSON en las peticiones
-app.use(cors());
-app.use(express.json());
+app.use(cors());             //cors para permitir conexión desde React
+app.use(express.json());    //express.json para aceptar datos JSON en las peticiones
+
+
+// Conectamos las rutas a sus respectivos endpoints
+app.use('/api/productos', productosRoutes);   // Productos: http://localhost:3001/api/productos
+app.use('/api/carrito', carritoRoutes);       // Carrito:   http://localhost:3001/api/carrito
+app.use('/api/usuarios', usuariosRoutes);     // Usuarios:  http://localhost:3001/api/usuarios
+
 
 // Probamos si la conexión a PostgreSQL funciona correctamente
 pool.query('SELECT NOW()', (err, res) => {
@@ -35,9 +41,7 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-// Conectamos las rutas a sus respectivos endpoints
-app.use('/api/productos', productosRoutes);  // Productos: http://localhost:3001/api/productos
-app.use('/api/carrito', carritoRoutes);      // Carrito:   http://localhost:3001/api/carrito
+
 
 // Ruta raíz de prueba
 app.get('/', (req, res) => {
