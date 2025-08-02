@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-// Importamos el controlador del carrito
-const carritoController = require('../controllers/carritoController');
+const {
+  agregarAlCarrito,
+  obtenerCarrito,
+  eliminarProductoDelCarrito,
+  actualizarCantidad
+} = require('../controllers/carritoController');
 
-// Ruta para crear un nuevo carrito
-router.post('/', carritoController.crearCarrito);
+// POST /api/carrito
+router.post('/', agregarAlCarrito);
 
-// Ruta para agregar un producto al carrito 
-router.post('/agregar', carritoController.agregarAlCarrito);
+// Otros endpoints opcionales:
+router.get('/:id_usuario', obtenerCarrito);
+router.put('/:id_usuario/:id_producto', actualizarCantidad);
+router.delete('/:id_carrito', eliminarProductoDelCarrito);
+
 
 module.exports = router;

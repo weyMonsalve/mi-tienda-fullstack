@@ -10,7 +10,7 @@ require('dotenv').config();
 // Importamos la conexión a PostgreSQL
 const pool = require('./db');
 
-//Importamos rutas (cada una maneja un módulo del sistema)
+// Importamos rutas (cada una maneja un módulo del sistema)
 const productosRoutes = require('./routes/productosRoutes');  // Ruta para productos
 const carritoRoutes = require('./routes/carritoRoutes');      // Ruta para carrito
 const usuariosRoutes = require('./routes/usuariosRoutes');    // Ruta para usuarios
@@ -22,15 +22,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares:
-app.use(cors());             //cors para permitir conexión desde React
-app.use(express.json());    //express.json para aceptar datos JSON en las peticiones
-
+app.use(cors());            // cors para permitir conexión desde React
+app.use(express.json());    // express.json para aceptar datos JSON en las peticiones
 
 // Conectamos las rutas a sus respectivos endpoints
 app.use('/api/productos', productosRoutes);   // Productos: http://localhost:3001/api/productos
 app.use('/api/carrito', carritoRoutes);       // Carrito:   http://localhost:3001/api/carrito
 app.use('/api/usuarios', usuariosRoutes);     // Usuarios:  http://localhost:3001/api/usuarios
-
 
 // Probamos si la conexión a PostgreSQL funciona correctamente
 pool.query('SELECT NOW()', (err, res) => {
@@ -40,8 +38,6 @@ pool.query('SELECT NOW()', (err, res) => {
     console.log('✅ Conectado a PostgreSQL. Hora actual:', res.rows[0]);
   }
 });
-
-
 
 // Ruta raíz de prueba
 app.get('/', (req, res) => {
