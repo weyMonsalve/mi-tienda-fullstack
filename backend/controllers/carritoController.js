@@ -57,6 +57,24 @@ const eliminarProductoDelCarrito = async(req, res) => {
     }
 };
 
+// Vaciar carrito
+const vaciarCarrito = async (req, res) => {
+    try {
+        const { id_usuario } = req.params;
+
+        if (!id_usuario) {
+            return res.status(400).json({ error: 'Falta el id del usuario' });
+        }
+
+        await carritoModel.vaciarCarritoPorUsuario(id_usuario);
+        res.status(200).json({ mensaje: 'Carrito vaciado correctamente' });
+    } catch (error) {
+        console.error('Error al vaciar el carrito', error);
+        res.status(500).json({ error: 'Error al vaciar el carrito' });
+    }
+};
+
+
 // Controlador para actualizar la cantidad de un producto en el carrito
 const actualizarCantidad = async (req, res) => {
   try {
@@ -87,5 +105,7 @@ module.exports = {
     agregarAlCarrito,
     obtenerCarrito,
     eliminarProductoDelCarrito,
+    vaciarCarrito,
     actualizarCantidad
+    
 };

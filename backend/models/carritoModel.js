@@ -45,6 +45,13 @@ const eliminarProductoDelCarrito = async (id_carrito) => {
     await db.query(query, [id_carrito]);
 };
 
+// Vaciar el carrito de un usuario (eliminar todos sus productos)
+const vaciarCarritoPorUsuario = async (id_usuario) => {
+    const query = 'DELETE FROM carrito WHERE id_usuario = $1';
+    await db.query(query, [id_usuario]);
+};
+
+
 // Actualizar la cantidad de un producto en el carrito
 const actualizarCantidadEnCarrito = async (id_usuario, id_producto, nuevaCantidad) => {
     const query = `
@@ -61,5 +68,6 @@ module.exports = {
     agregarAlCarrito,
     obtenerCarritoPorUsuario,
     eliminarProductoDelCarrito,
-    actualizarCantidadEnCarrito
+    actualizarCantidadEnCarrito,
+    vaciarCarritoPorUsuario
 };
